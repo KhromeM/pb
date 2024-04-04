@@ -1,0 +1,1 @@
+Get a screenshots of a page and send it to gpt4v
