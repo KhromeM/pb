@@ -1,0 +1,6 @@
+Send html derivative to gpt4 and ask it what to do
+    download the html
+    clean it up so only the parts that carry remain
+    send that
+send screenshot + html derivative
+split screenshots into smaller images
