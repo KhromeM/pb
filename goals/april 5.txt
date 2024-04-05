@@ -1,4 +1,5 @@
-Send html derivative to gpt4 and ask it what to do
+Get html of a page and clean it
+Send cleaned html to gpt4 and ask it what to do
     download the html
     clean it up so only the parts that carry remain
     send that
