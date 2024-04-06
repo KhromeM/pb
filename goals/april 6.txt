@@ -1,0 +1,4 @@
+Set up resursive program and run some tests
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+Set up gemini api
+Set up a frontend that takes a picture
