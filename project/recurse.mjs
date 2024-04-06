@@ -8,12 +8,13 @@ import {
 } from "../src/scraper.mjs";
 import { askGPT } from "../src/openai_api.mjs";
 
-const url =
+let url =
 	"https://eddservices.edd.ca.gov/acctservices/AccountManagement/AccountServlet?Command=NEW_SIGN_UP";
+url = "https://codeforces.com/register";
 
 const start = async () => {
 	let step = 1;
-	const goal = "Log in";
+	const goal = "Register";
 	const dataBank = {
 		username: "isthisreal1",
 		password: "Password123!",
@@ -31,10 +32,9 @@ const start = async () => {
 		console.log(response.usage);
 		// console.log(response.choices);
 		console.log("\nStep: " + step + "\nResponse: \n" + message);
-		await sleep(1000);
 		let todo = eval(message.slice(5, -3));
 		await execute_steps(todo, page);
-		await sleep(1000);
+		step++;
 	}
 	browser.close();
 };
@@ -61,6 +61,7 @@ async function execute_steps(steps, page) {
 		if (step[0] === "failure") {
 			failure();
 		}
+		await sleep(1000);
 	}
 }
 
