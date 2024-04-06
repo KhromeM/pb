@@ -10,10 +10,10 @@ const getBrowserAndPage = async (url) => {
 	return { page, browser };
 };
 
-const getPageHTML = async (page) => {
-	await page.waitForTimeout(300);
-	const htmlContent = await page.content();
-	return htmlContent;
+const getBodyHTML = async (page) => {
+	await page.waitForLoadState("networkidle");
+	const bodyHTML = await page.$eval("body", (body) => body.innerHTML);
+	return bodyHTML;
 };
 
 async function fillIn(page, selector, value) {
@@ -24,7 +24,7 @@ async function click(page, selector) {
 	await page.locator(selector).click();
 }
 
-export { getPageHTML, getBrowserAndPage, fillIn, click };
+export { getBodyHTML, getBrowserAndPage, fillIn, click };
 
 // await page.setViewportSize({ width: 1800, height: 1000 });
 // const src = readFileSync("src/domUtils.js", "utf8");

@@ -1,36 +1,51 @@
 import dotenv from "dotenv";
 dotenv.config();
 import {
-	getPageHTML,
+	getBodyHTML,
 	getBrowserAndPage,
 	fillIn,
 	click,
 } from "../src/scraper.mjs";
+import { writeFileSync } from "fs";
 import { askGPT } from "../src/openai_api.mjs";
 
 let url =
 	"https://eddservices.edd.ca.gov/acctservices/AccountManagement/AccountServlet?Command=NEW_SIGN_UP";
 url = "https://codeforces.com/register";
+url = "https://old.reddit.com";
 
 const start = async () => {
 	let step = 1;
-	const goal = "Register";
+	let memory =
+		"This is a history of actions you have tried. Learn from the past. Memory: (if empty, then you havent tried anything yet)\n";
+	const goal = "log in";
 	const dataBank = {
-		username: "isthisreal1",
-		password: "Password123!",
+		possible_usernames: [
+			"isthi4l1",
+			"dsf234W",
+			"34sed2",
+			"5234sfsed",
+			"fsdfsWWWT",
+		],
+		password: ["234!!dfsdd123!", "ps2340123", "P@s345d321!"],
 		first_name: "John",
 		last_name: "Doe",
 		pin: "1234",
-		email: "isthisreal1@gmail.com",
+		possible_emails: [
+			"isWED12sreal1@gmail.com",
+			"j325234de@gmail.com",
+			"j234hd3de@gmail.com",
+			"j234hde@gmail.com",
+		],
 		phone_number: "412-444-1234",
 	};
 	const { page, browser } = await getBrowserAndPage(url);
 	while (!completed) {
-		const html = await getPageHTML(page);
-		const response = await askGPT(goal, dataBank, html);
+		const html = await getBodyHTML(page);
+		const response = await askGPT(goal, dataBank, html, memory);
 		const message = response["choices"][0]["message"]["content"];
 		console.log(response.usage);
-		// console.log(response.choices);
+		memory += "\nStep: " + step + "\nResponse: \n" + message;
 		console.log("\nStep: " + step + "\nResponse: \n" + message);
 		let todo = eval(message.slice(5, -3));
 		await execute_steps(todo, page);
@@ -49,19 +64,25 @@ const success = () => {
 };
 async function execute_steps(steps, page) {
 	for (const step of steps) {
-		if (step[0] === "fillIn") {
-			await fillIn(page, step[1], step[2]);
+		try {
+			if (step[0] === "fillIn") {
+				await fillIn(page, step[1], step[2]);
+			}
+			if (step[0] === "click") {
+				await click(page, step[1], step[2]);
+			}
+			if (step[0] === "success") {
+				success();
+			}
+			if (step[0] === "failure") {
+				failure();
+			}
+		} catch (error) {
+			// send error to gpt
+			console.error(error);
 		}
-		if (step[0] === "click") {
-			await click(page, step[1], step[2]);
-		}
-		if (step[0] === "success") {
-			success();
-		}
-		if (step[0] === "failure") {
-			failure();
-		}
-		await sleep(1000);
+
+		// await sleep(3000);
 	}
 }
 
